@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/basicLayout.xhtml">
+
+	<ui:define name="content">
+		<div class="home">
+			<p:dataTable id="anzTabId" var="anzeige"
+				value="#{uebersichtBean.anzeigen}" widgetVar="anzeigenTable"
+				emptyMessage="Keine Anzeigen zu den verwendeten Filterkriterien vorhanden"
+				filteredValue="#{uebersichtBean.filteredAnzeigen}"
+				globalFilterFunction="#{uebersichtBean.globalFilterFunction}">
+
+				<f:facet name="header">
+					<div class="flex justify-content-end">
+						<p:inputText id="globalFilter"
+							onkeyup="PF('anzeigenTable').filter()" style="width:300px"
+							placeholder="Suche in allen Feldern nach..." />
+					</div>
+				</f:facet>
+
+
+				<p:column field="name" filterable="false" />
+
+				<p:column field="beschreibung" filterable="false" />
+
+				<p:column field="kategorie" filterable="false">
+					<span>#{anzeige.kategorie.toString()}</span>
+				</p:column>
+
+				<p:column field="datum" filterable="false" />
+
+				<p:column style="width:2rem;text-align: center">
+					<p:commandButton update=":form:anzeigeDetail"
+						disabled="#{anzeige.geschlossen}"
+						oncomplete="PF('anzeigeDialog').show()" icon="pi pi-pencil" styleClass="rounded-button ui-button-success ui-button-outlined"
+						title="View">
+						<f:setPropertyActionListener value="#{anzeige}"
+							target="#{anzeigeBean.anzeige}" />
+					</p:commandButton>
+				</p:column>
+				<p:column style="width:2rem;text-align: center">
+					<p:commandButton update=":form:angebotAbgebenDetail"
+						disabled="#{anzeige.geschlossen}"
+						actionListener="#{angebotAbgebenBean.reset}"
+						oncomplete="PF('angebotAbgebenDialog').show()" icon="pi pi-thumbs-up" styleClass="rounded-button ui-button-info ui-button-outlined"
+						title="View">
+						<f:setPropertyActionListener value="#{anzeige}"
+							target="#{angebotAbgebenBean.anzeige}" />
+					</p:commandButton>
+				</p:column>
+				<p:column style="width:2rem;text-align: center">
+					<p:commandButton update=":form:anzTabId"
+						disabled="#{anzeige.geschlossen}"
+						actionListener="#{uebersichtBean.anzeigeSchliessen(anzeige)}"
+						icon="pi pi-lock" styleClass="rounded-button ui-button-danger ui-button-outlined"
+						title="Schliessen">
+					</p:commandButton>
+				</p:column>
+				<p:column style="width:3rem;text-align: center">
+					<p:badge value="#{anzeige.anzahlAngebote}" severity="danger">
+						<p:commandButton update=":form:angebotAnnehmenDetail"
+							oncomplete="PF('angebotAnnehmenDialog').show()" icon="pi pi-bell" styleClass="rounded-button ui-button-warning ui-button-outlined"
+							title="View">
+							<f:setPropertyActionListener value="#{anzeige}"
+								target="#{angebotAnnehmenBean.anzeige}" />
+						</p:commandButton>
+					</p:badge>
+				</p:column>
+
+			</p:dataTable>
+		</div>
+		
+	    <p:dialog header="Anzeige" widgetVar="anzeigeDialog" modal="true" showEffect="fade"
+	              hideEffect="fade" resizable="false">
+	        <p:outputPanel id="anzeigeDetail">
+	            <p:panelGrid columns="2"  layout="grid"	
+	            contentStyleClass="align-items-baseline ui-fluid">
+                    <p:outputLabel for="dlgBeschreibung" value="Beschreibung"/>
+			        <p:inputTextarea id="dlgBeschreibung" rows="5" cols="30" counter="display" maxlength="1000" value="#{anzeigeBean.anzeige.beschreibung}"
+			                         counterTemplate="{0} characters remaining." autoResize="true"/>
+			        <h:outputText/>
+			        <h:outputText id="display" class="block" />
+			        
+                    <p:outputLabel for="dlgKategorie" value="Kategorie"/>
+			        <p:selectOneMenu id="dlgKategorie" value="#{anzeigeBean.anzeige.kategorie}">
+			            <f:selectItem itemLabel="SUCHE" itemValue="SUCHE"/>
+			            <f:selectItem itemLabel="BIETE" itemValue="BIETE"/>
+			        </p:selectOneMenu>
+			        
+                    <p:outputLabel for="dlgDatum" value="Datum"/>
+			        <p:datePicker id="dlgDatum" value="#{anzeigeBean.anzeige.datum}" showIcon="true" style="width:auto"/>
+	            </p:panelGrid>
+	            <p:panelGrid columns="1"  layout="grid"	contentStyleClass="align-items-baseline ui-fluid">
+                    <p:commandButton value="Speichern" icon="pi pi-save" update=":form:anzTabId" oncomplete="PF('anzeigeDialog').hide()">
+                        <f:setPropertyActionListener value="#{anzeigeBean.anzeige}"
+                                                     target="#{anzeigeBean.anzeige}"/>
+                    </p:commandButton>
+	            </p:panelGrid>
+	        </p:outputPanel>
+	    </p:dialog>		
+		
+	    <p:dialog header="Angebot" widgetVar="angebotAbgebenDialog" modal="true" showEffect="fade"
+	              hideEffect="fade" resizable="false">
+	        <p:outputPanel id="angebotAbgebenDetail">
+	            <p:panelGrid columns="2"  layout="grid"	
+	            contentStyleClass="align-items-baseline ui-fluid">
+                    <p:outputLabel for="dlgBeschreibungAngebot" value="Beschreibung"/>
+			        <p:inputTextarea id="dlgBeschreibungAngebot" rows="5" cols="30" counter="displayDlgAngebot" maxlength="1000" value="#{angebotAbgebenBean.angebot.beschreibung}"
+			                         counterTemplate="{0} characters remaining." autoResize="true"/>
+			        <h:outputText/>
+			        <h:outputText id="displayDlgAngebot" class="block" />
+			        
+			        
+                    <p:outputLabel for="dlgDatumAngebot" value="Datum"/>
+			        <p:datePicker id="dlgDatumAngebot" value="#{angebotAbgebenBean.angebot.datum}" showIcon="true" style="width:auto"/>
+	            </p:panelGrid>
+	            <p:panelGrid columns="1"  layout="grid"	contentStyleClass="align-items-baseline ui-fluid">
+                    <p:commandButton value="Speichern" icon="pi pi-save" actionListener="#{angebotAbgebenBean.angebotAbgeben}" update=":form:anzTabId" oncomplete="PF('angebotAbgebenDialog').hide()">
+                    </p:commandButton>
+	            </p:panelGrid>
+	        </p:outputPanel>
+	    </p:dialog>		
+		
+	    <p:dialog header="Angebote" widgetVar="angebotAnnehmenDialog" modal="true" showEffect="fade"
+	              hideEffect="fade" resizable="false">
+	        <p:outputPanel id="angebotAnnehmenDetail">
+				<p:dataTable id="dtAngebote" var="angebot"
+					value="#{angebotAnnehmenBean.anzeige.angebote}" widgetVar="angeboteTable"
+					emptyMessage="Keine Angebote vorhanden">
+					<p:column field="beschreibung" filterable="false" />
+					<p:column field="datum" filterable="false">
+						<h:outputText value="#{angebot.datum}" >
+						    <f:convertDateTime pattern="dd.MM.yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column field="datumAngenommen" filterable="false">
+						<h:outputText value="#{angebot.datumAngenommen}" >
+						    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+						</h:outputText>
+					</p:column>
+	
+					<p:column style="width:2rem;text-align: center">
+						<p:commandButton update=":form:angebotAnnehmenDetail"
+							disabled="#{angebot.angenommen or angebotAnnehmenBean.anzeige.geschlossen}"
+							actionListener="#{angebotAnnehmenBean.selectedAngebotAnnehmen(angebot)}"
+							icon="pi pi-thumbs-up" styleClass="rounded-button ui-button-info ui-button-outlined"
+							title="View">
+							<f:setPropertyActionListener value="#{angebot}"
+								target="#{angebotAnnehmenBean.selectedAngebot}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+	        </p:outputPanel>
+	    </p:dialog>		
+	</ui:define>
+</ui:composition>

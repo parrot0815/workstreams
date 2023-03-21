@@ -1,0 +1,11 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:mvv="http://java.sun.com/jsf/composite/mvv">
+	
+	<mvv:schluesselTabelle bean="#{vorfallsartBean}" headertext="Vorfallsart" buttonlabel="Neue Vorfallsart"/>
+	<p:separator/>
+	<mvv:schluesselTabelle bean="#{ursacheBean}" headertext="Ursache" buttonlabel="Neue Ursache"/>
+</ui:composition>

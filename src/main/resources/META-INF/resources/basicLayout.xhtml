@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<h:head>
+		<!-- IE 11 Fix wenn office.dir URLs benutzt werden. IE wechselt sonst zu IE7 Kompabilitätsmodus -->
+		<f:facet name="first">
+			<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		</f:facet>
+		<title>Projekt Peter</title>
+		<!-- <h:outputStylesheet library="css" name="style-primefaces.css"/> -->
+		<!-- <h:outputStylesheet library="css" name="style.css" /> -->
+		<!-- <h:outputStylesheet library="css" name="normalize.css" /> -->
+		<!-- <h:outputScript library="js" name="de.js" /> -->
+	</h:head>
+
+	<h:body>
+		<h:form id="form">
+			<ui:insert name="header">
+				<ui:include src="header.xhtml"/>
+			</ui:insert>
+			<ui:insert name="content" />
+		</h:form>
+	</h:body>
+
+</html>

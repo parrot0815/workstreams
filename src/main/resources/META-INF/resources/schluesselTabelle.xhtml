@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui">
+	<cc:interface shortDescription="Detailansicht eines Vorfalls in der Übersicht">
+		<cc:attribute name="bean" required="true"/>
+		<cc:attribute name="headertext" required="true"/>
+		<cc:attribute name="buttonlabel" required="true"/>
+	</cc:interface>	
+	<cc:implementation>
+		<p:dataTable id="schluesselTab" var="entry" value="#{cc.attrs.bean.schluesselListe}" editable="true" style="margin-bottom:20px">
+			<p:ajax event="rowEdit" listener="#{cc.attrs.bean.onRowEdit}" update="schluesselTab" />
+			<p:ajax event="rowEditCancel" listener="#{cc.attrs.bean.onRowCancel}" update="schluesselTab" />
+			<p:column headerText="#{cc.attrs.headertext}">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{entry.bezeichnung}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{entry.bezeichnung}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Beschreibung">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{entry.beschreibung}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{entry.beschreibung}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Oberkategorie">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:selectOneMenu id="vo1" disabled="true" value="#{entry.schluessel.parent}" style="width:250px" >
+							<f:selectItems value="#{cc.attrs.bean.auswahlListe}" var="vfa1"
+								itemLabel="#{vfa1.schluessel.bezeichnung}" itemValue="#{vfa1.schluessel.id}" />
+		        		</p:selectOneMenu>
+					</f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu id="vo2" value="#{entry.schluessel.parent}" style="width:250px" >
+							<f:selectItems value="#{cc.attrs.bean.auswahlListe}" var="vfa"
+								itemLabel="#{vfa.schluessel.bezeichnung}" itemValue="#{vfa.schluessel.id}" />
+		        		</p:selectOneMenu>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column style="width:35px">
+				<p:rowEditor />
+			</p:column>
+		</p:dataTable>
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<p:commandButton value="#{cc.attrs.buttonlabel}" styleClass="ui-priority-primary" process="@this" update="schluesselTab" action="#{cc.attrs.bean.onAddNew}" />
+			</div>
+		</div>
+	</cc:implementation>
+</ui:composition>
