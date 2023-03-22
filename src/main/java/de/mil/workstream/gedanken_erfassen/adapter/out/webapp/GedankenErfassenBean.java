@@ -16,6 +16,24 @@ public class GedankenErfassenBean implements Serializable {
 	private static final long serialVersionUID = -4036108828006342688L;
 
 	private List<Gedanke> gedanken;
+	private String newTitel;
+	private String newText;
+
+	public String getNewTitel() {
+		return newTitel;
+	}
+
+	public void setNewTitel(String newTitel) {
+		this.newTitel = newTitel;
+	}
+
+	public String getNewText() {
+		return newText;
+	}
+
+	public void setNewText(String newText) {
+		this.newText = newText;
+	}
 
 	@PostConstruct
 	public void init() {
@@ -28,5 +46,12 @@ public class GedankenErfassenBean implements Serializable {
 
 	public void setGedanken(List<Gedanke> gedanken) {
 		this.gedanken = gedanken;
+	}
+
+	public void speichern() {
+		final var newGedanke = new Gedanke(newTitel, newText);
+		gedanken.add(newGedanke);
+		newText = null;
+		newTitel = null;
 	}
 }
