@@ -252,7 +252,7 @@
 
 
     <build>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <resources>
             <resource>
                 <filtering>false</filtering>
